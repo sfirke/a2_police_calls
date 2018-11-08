@@ -18,12 +18,13 @@ reports <- raw %>%
   filter(
     str_detect(reported_off_des, "DRUNK") |
       str_detect(reported_off_des, "NOISE") |
-      str_detect(reported_off_des, "FTA")) %>% # control
+      str_detect(reported_off_des, "FTA")) %>% # a control variable, should be less seasonal
   filter(call_source %in% c("911", "PHONE"),
          mon %in% c("Aug", "Sep", "Oct")) %>%
   mutate(mon = factor(mon, levels = c("Aug", "Sep", "Oct"))) %>%
   rename(issue = reported_off_des)
 
+# fix too-long value
 reports$issue[reports$issue == "NUISANCES ORD - NOISE / PROHIBITED HOURS / AREA"] <- "NUISANCE NOISE"
 
 x <- reports %>%
@@ -84,9 +85,11 @@ reports %>%
 # using stored variable names
 
 x
-
 x %>%
   adorn_title()
+
+## Compare to more rigid 0.3 adorn_crosstab()
+# Modularity is good.
 
 ## ------- S3 Methods ----------
 
@@ -99,6 +102,9 @@ tabyl(reports, issue) # data.frame, col name
 # also works on a vector
 tabyl(reports$issue)
 
+# ???
+
 # It's a hack ... but I'm not ashamed.
-# <go look at source code>
+# <look at slide diagram>
+# <then go look at source code>
 
